@@ -26,6 +26,7 @@ const scroller = ref(null)
 const gridItems = ref(32)
 const itemSize = ref(1232 / gridItems.value)
 const renderKey = ref(Date.now())
+const count = ref(props.count)
 
 const onResize = () => {
     const { width } = useElementBounding(scroller)
@@ -35,6 +36,8 @@ const onResize = () => {
 const setItemState = (id, checked) => {
     items[id - 1].checked = checked
     renderKey.value = Date.now()
+
+    count.value += checked ? 1 : -1
 }
 
 const channel = Echo.private('checkboxes')
@@ -53,6 +56,11 @@ const toggle = (id, checked) => {
 </script>
 
 <template>
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            Count: {{ count }}
+        </div>
+    </div>
     <RecycleScroller
         ref="scroller"
         class="flex-grow overflow-y-auto max-h-[720px]"
