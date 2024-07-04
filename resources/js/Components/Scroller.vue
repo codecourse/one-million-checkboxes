@@ -33,6 +33,8 @@ const onResize = () => {
     gridItems.value = Math.floor(width.value / itemSize.value)
 }
 
+onResize()
+
 const setItemState = (id, checked) => {
     items[id - 1].checked = checked
     renderKey.value = Date.now()
