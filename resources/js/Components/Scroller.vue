@@ -53,12 +53,24 @@ const toggle = (id, checked) => {
 
     setItemState(id, checked)
 }
+
+const boxNavigateTo = ref(null)
+const goToBox = () => {
+    scroller.value.scrollToItem(boxNavigateTo.value)
+}
 </script>
 
 <template>
     <div class="flex items-center justify-between mb-6">
         <div>
             Count: {{ count }}
+        </div>
+        <div>
+            <form class="flex items-center space-x-1" v-on:submit.prevent="goToBox">
+                <label for="box">Go to box:</label>
+                <input type="number" min="1" max="1000000" class="bg-gray-100" v-model="boxNavigateTo">
+                <button>Go</button>
+            </form>
         </div>
     </div>
     <RecycleScroller
