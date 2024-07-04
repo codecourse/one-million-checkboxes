@@ -1,11 +1,23 @@
 <script setup>
 import { RecycleScroller } from 'vue-virtual-scroller'
 import {ref} from "vue";
+import BitSet from "bitset";
+
+const props = defineProps({
+    state: String,
+    count: Number
+})
+
+const bitset = new BitSet()
+
+for (let i = 0; i < props.state.length; i++) {
+    bitset.set(i, Number(props.state.charAt(i)))
+}
 
 let items = [...Array(1000000).keys()].map((index) => {
     return {
         id: index + 1,
-        checked: false
+        checked: bitset.get(index + 1)
     }
 })
 
