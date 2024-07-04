@@ -2,6 +2,7 @@
 import { RecycleScroller } from 'vue-virtual-scroller'
 import {ref} from "vue";
 import BitSet from "bitset";
+import { useElementBounding } from "@vueuse/core";
 
 const props = defineProps({
     state: String,
@@ -21,9 +22,15 @@ let items = [...Array(1000000).keys()].map((index) => {
     }
 })
 
+const scroller = ref(null)
 const gridItems = ref(32)
 const itemSize = ref(1232 / gridItems.value)
 const renderKey = ref(Date.now())
+
+const onResize = () => {
+    const { width } = useElementBounding(scroller)
+    gridItems.value = Math.floor(width.value / itemSize.value)
+}
 
 const setItemState = (id, checked) => {
     items[id - 1].checked = checked
@@ -47,14 +54,15 @@ const toggle = (id, checked) => {
 
 <template>
     <RecycleScroller
+        ref="scroller"
         class="flex-grow overflow-y-auto max-h-[720px]"
         :items="items"
         :item-size="itemSize"
         :grid-items="gridItems"
-        :key="renderKey"
+        v-on:resize="onResize"
     >
         <template #default="{ item }">
-            <div class="h-full flex items-center justify-center">
+            <div class="h-full flex items-center justify-center" :key="renderKey">
                 <input type="checkbox" class="size-6" :checked="item.checked" v-on:change="toggle(item.id, $event.target.checked)">
             </div>
         </template>
